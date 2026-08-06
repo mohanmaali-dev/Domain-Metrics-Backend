@@ -7,5 +7,4 @@ const start = () => {
     logger.info(`Server running on port ${env.port}`);
   });
 };
-
 start();
