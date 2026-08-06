@@ -24,7 +24,7 @@ const mapMozResponse = (payload) => {
     inboundLinks: metrics.pages_to_root_domain ?? metrics.inbound_links ?? null,
     domainAge: metrics.last_crawled ?? null,
     title: metrics.title ?? null,
-    raw: payload,
+    // raw: payload,
   };
 };
 
