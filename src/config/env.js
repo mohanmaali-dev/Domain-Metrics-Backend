@@ -9,4 +9,5 @@ export const env = {
   rateLimitMax: Number(process.env.RATE_LIMIT_MAX) || 100,
   domainMetricsApiToken: process.env.DOMAIN_METRICS_API_TOKEN || '',
   moz_api_token: process.env.MOZ_API_TOKEN || '',
+  open_page_rank_api_token: process.env.OPEN_PAGE_RANK_API_TOKEN || '',
 };
