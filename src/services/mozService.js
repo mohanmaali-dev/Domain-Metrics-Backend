@@ -4,7 +4,7 @@ const getStaticDomainMetrics = (domain) => {
   void domain;
 
   return {
-    domainAuthority: 80,
+    domainAuthority: 85,
     pageAuthority: 98,
     spamScore: 2,
     linkingDomains: 250000,
