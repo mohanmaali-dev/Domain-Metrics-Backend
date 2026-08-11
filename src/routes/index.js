@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
-import { domainMetricsRouter } from './domainMetricsRoutes.js';
+import { getDomainMetrics } from '../controllers/domainMetricsController.js';
+import { verifyMozToken } from '../middlewares/verify-moz-token.middleware.js';
 
 export const apiRouter = Router();
 
@@ -16,4 +17,4 @@ apiRouter.get('/health', (_request, response) => {
   });
 });
 
-apiRouter.use('/domain-metrics', domainMetricsRouter);
+apiRouter.post('/', verifyMozToken, getDomainMetrics);

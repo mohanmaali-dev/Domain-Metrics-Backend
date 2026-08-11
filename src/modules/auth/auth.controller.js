@@ -1,5 +1,4 @@
 import { accessCookieOptions, refreshCookieOptions } from '../../config/cookies.js';
-import { env } from '../../config/env.js';
 import { ACCESS_COOKIE, REFRESH_COOKIE } from './auth.constants.js';
 import * as authService from './auth.service.js';
 
@@ -16,7 +15,6 @@ export const register = async (request, response) => {
     success: true,
     message: 'Registration successful',
     data: result.user,
-    meta: { requiresEmailVerification: env.requireEmailVerification },
   });
 };
 
@@ -28,7 +26,6 @@ export const login = async (request, response) => {
     success: true,
     message: 'Login successful',
     data: result.user,
-    meta: { requiresEmailVerification: result.requiresEmailVerification },
   });
 };
 
@@ -62,32 +59,4 @@ export const changePassword = async (request, response) => {
     success: true,
     message: 'Password changed. Please log in again.',
   });
-};
-
-export const forgotPassword = async (request, response) => {
-  await authService.forgotPassword(request.body.email);
-  return response.status(200).json({
-    success: true,
-    message: 'If the email exists, a reset link has been sent',
-  });
-};
-
-export const resetPassword = async (request, response) => {
-  const { token, password } = request.body;
-  await authService.resetPassword(token, password);
-  return response.status(200).json({ success: true, message: 'Password reset successful' });
-};
-
-export const sendVerificationEmail = async (request, response) => {
-  const emailSent = await authService.sendVerificationEmail(request.userId);
-
-  return response.status(200).json({
-    success: true,
-    message: emailSent ? 'Verification email sent' : 'Email is already verified',
-  });
-};
-
-export const verifyEmail = async (request, response) => {
-  await authService.verifyEmail(request.body.token);
-  return response.status(200).json({ success: true, message: 'Email verified successfully' });
 };

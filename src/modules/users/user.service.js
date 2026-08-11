@@ -32,9 +32,6 @@ export const getUsers = async (query) => {
 
   if (query.role) filters.role = query.role;
   if (query.isActive !== undefined) filters.isActive = query.isActive === 'true';
-  if (query.isEmailVerified !== undefined) {
-    filters.isEmailVerified = query.isEmailVerified === 'true';
-  }
 
   const databaseQuery = { ...filters };
 

@@ -7,15 +7,6 @@ export const globalRateLimiter = rateLimit({
   max: env.rateLimitMax,
   message: {
     success: false,
-    message: 'Too many requests, plese try again later',
-  },
-});
-
-export const emailRateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: {
-    success: false,
-    message: 'Too many email requests, please try again later',
+    message: 'Too many requests, please try again later',
   },
 });
