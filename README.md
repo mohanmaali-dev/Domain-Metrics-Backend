@@ -45,6 +45,8 @@ The endpoint compares the `x-moz-token` header with `MOZ_API_TOKEN`, then valida
 the JSON-RPC version, request ID, method, site URL, and domain scope before returning
 the dummy response.
 
+The site query accepts both `https://moz.com/blog` and `moz.com/blog`.
+
 ## Run the server
 
 ### Development

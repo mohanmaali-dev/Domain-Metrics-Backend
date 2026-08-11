@@ -14,12 +14,14 @@ const isValidId = (id) =>
   (typeof id === 'string' && id.trim() !== '') ||
   (typeof id === 'number' && Number.isFinite(id));
 
-const isValidUrl = (value) => {
-  if (typeof value !== 'string' || value.trim() === '') return false;
+const isValidSiteQuery = (value) => {
+  if (typeof value !== 'string' || value.trim() === '' || /\s/.test(value)) return false;
 
   try {
-    const url = new URL(value);
-    return url.protocol === 'http:' || url.protocol === 'https:';
+    const query = /^[a-z][a-z\d+.-]*:\/\//i.test(value) ? value : `https://${value}`;
+    const url = new URL(query);
+
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.includes('.');
   } catch {
     return false;
   }
@@ -39,7 +41,7 @@ export const getDomainMetrics = (request, response) => {
 
   const siteQuery = body.params?.data?.site_query;
 
-  if (!isValidUrl(siteQuery?.query) || siteQuery?.scope !== 'domain') {
+  if (!isValidSiteQuery(siteQuery?.query) || siteQuery?.scope !== 'domain') {
     return sendError(response, id, 400, -32602, 'A valid site query and domain scope are required');
   }
 
