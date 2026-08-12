@@ -45,7 +45,16 @@ The endpoint compares the `x-moz-token` header with `MOZ_API_TOKEN`, then valida
 the JSON-RPC version, request ID, method, site URL, and domain scope before returning
 the dummy response.
 
-The site query accepts both `https://moz.com/blog` and `moz.com/blog`.
+The single-site query accepts both `https://moz.com/blog` and `moz.com/blog`, with
+`domain`, `subdomain`, `subfolder`, or `url` scope.
+
+For multiple sites, use method `data.site.metrics.fetch.multiple` and provide a
+non-empty `params.data.site_queries` array. Each item accepts `domain`, `subdomain`,
+`subfolder`, or `url` scope.
+
+Because this is a dummy API, every submitted site receives the same static metric
+values. The response count, URL, scope, page, subdomain, and root domain are generated
+from the submitted queries.
 
 ## Run the server
 

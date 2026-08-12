@@ -1,6 +1,12 @@
-import { getDummyDomainMetrics } from '../services/domainMetricsService.js';
+import {
+  getDummyDomainMetrics,
+  getDummyMultipleDomainMetrics,
+} from '../services/domainMetricsService.js';
 
-const METHOD = 'data.site.metrics.fetch';
+const SINGLE_METHOD = 'data.site.metrics.fetch';
+const MULTIPLE_METHOD = 'data.site.metrics.fetch.multiple';
+const METHODS = [SINGLE_METHOD, MULTIPLE_METHOD];
+const SCOPES = ['domain', 'subdomain', 'subfolder', 'url'];
 
 const sendError = (response, id, status, code, message) =>
   response.status(status).json({
@@ -27,6 +33,9 @@ const isValidSiteQuery = (value) => {
   }
 };
 
+const isValidQuery = (siteQuery, allowedScopes) =>
+  isValidSiteQuery(siteQuery?.query) && allowedScopes.includes(siteQuery.scope);
+
 export const getDomainMetrics = (request, response) => {
   const body = request.body;
   const id = isValidId(body?.id) ? body.id : null;
@@ -35,15 +44,41 @@ export const getDomainMetrics = (request, response) => {
     return sendError(response, id, 400, -32600, 'Invalid JSON-RPC request');
   }
 
-  if (body.method !== METHOD) {
+  if (!METHODS.includes(body.method)) {
     return sendError(response, id, 404, -32601, 'Method not found');
   }
 
-  const siteQuery = body.params?.data?.site_query;
+  const data = body.params?.data;
 
-  if (!isValidSiteQuery(siteQuery?.query) || siteQuery?.scope !== 'domain') {
-    return sendError(response, id, 400, -32602, 'A valid site query and domain scope are required');
+  if (body.method === SINGLE_METHOD && !isValidQuery(data?.site_query, SCOPES)) {
+    return sendError(
+      response,
+      id,
+      400,
+      -32602,
+      'site_query must contain a valid query with domain, subdomain, subfolder, or url scope',
+    );
   }
 
-  return response.status(200).json(getDummyDomainMetrics());
+  if (body.method === MULTIPLE_METHOD) {
+    const siteQueries = data?.site_queries;
+    const allQueriesAreValid =
+      Array.isArray(siteQueries) &&
+      siteQueries.length > 0 &&
+      siteQueries.every((siteQuery) => isValidQuery(siteQuery, SCOPES));
+
+    if (!allQueriesAreValid) {
+      return sendError(
+        response,
+        id,
+        400,
+        -32602,
+        'site_queries must contain valid queries with domain, subdomain, subfolder, or url scope',
+      );
+    }
+
+    return response.status(200).json(getDummyMultipleDomainMetrics(siteQueries));
+  }
+
+  return response.status(200).json(getDummyDomainMetrics(data.site_query));
 };
