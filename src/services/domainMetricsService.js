@@ -35,7 +35,7 @@ const DUMMY_METRICS = {
   deleted_root_domains_to_root_domain: 30393,
   nofollow_root_domains_to_root_domain: 38829,
   page_authority: 70,
-  domain_authority: 90,
+  domain_authority: 80,
   link_propensity: 0.01030706428,
   spam_score: 3,
   root_domains_from_page: 6,
